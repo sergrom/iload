@@ -32,6 +32,6 @@ The program will try to download and save files with names: "first_file.jpg", "s
 
 If while saving some file with name <code>file.jpg</code> it happens that file with same name is already exists,
 the program wil try to save it with name <code>file_1.jpg</code>.
-If such file also exists, it will rty to save the file with name <code>file_2.jpg</code>, and so on.
+If such file also exists, it will try to save the file with name <code>file_2.jpg</code>, and so on unil <code>file_99.jpg</code>, then program will start to rewrite files in output directory. So if you want to prevent rewriting downloaded files, please specify file names explicitly.
 ## Output directory
 The output directory must be specified by parameter <code>-d</code>.
