@@ -25,7 +25,7 @@ func main() {
 	var Verbose bool
 
 	flag.StringVar(&InputFile, "f", "", "Input file with urls you want to download. Each url must be in separate line.")
-	flag.StringVar(&OutputDir, "d", "", "Output directory to which you want to save images.")
+	flag.StringVar(&OutputDir, "d", "", "Output directory to which you want to save downloaded files.")
 	flag.IntVar(&MaxWorkers, "th", NumberOfThreadsDefault,"Number of threads.")
 	flag.BoolVar(&Verbose, "v", false, "Verbose")
 	flag.Parse()
