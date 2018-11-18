@@ -32,7 +32,7 @@ func main() {
 
 	OutputDir = strings.TrimRight(OutputDir, "/")
 
-	if InputFile == "" || MaxWorkers < 1 {
+	if InputFile == "" || OutputDir == "" || MaxWorkers < 1 {
 		flag.Usage()
 		return
 	}
