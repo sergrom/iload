@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bufio"
+	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 )
 
@@ -11,22 +14,43 @@ type Download struct {
 }
 
 type DownloadList struct {
+	file         *os.File
+	scanner      *bufio.Scanner
 	downloads    []Download
 	mux          sync.Mutex
 	currentIndex int
 }
 
+func (dl *DownloadList) Open(filename string) error {
+	f, err := os.Open(filename)
+	if err != nil {
+		return err
+	}
+
+	dl.file = f
+	dl.scanner = bufio.NewScanner(dl.file)
+	return nil
+}
+
+func (dl *DownloadList) Close() {
+	dl.file.Close()
+}
+
 func (dl *DownloadList) getNext() (Download, bool) {
-	var download Download
-	var done bool
+	download, done := Download{}, true
 
 	dl.mux.Lock()
 
-	if dl.currentIndex >= len(dl.downloads) {
-		download, done = Download{}, true
-	} else {
-		download, done = dl.downloads[dl.currentIndex], false
-		dl.currentIndex++
+	for dl.scanner.Scan() {
+		url, filename := parseRow(dl.scanner.Text())
+		if url != "" {
+			if filename == "" {
+				filename = filepath.Base(url)
+			}
+
+			download, done = Download{url, filename}, false
+			break
+		}
 	}
 
 	dl.mux.Unlock()
@@ -34,10 +58,19 @@ func (dl *DownloadList) getNext() (Download, bool) {
 	return download, done
 }
 
-func (dl *DownloadList) fillOutputFileNames() {
-	for i, d := range dl.downloads {
-		if d.filename == "" {
-			dl.downloads[i].filename = filepath.Base(d.url)
-		}
+func parseRow(fileRow string) (string, string) {
+	var url, filename string
+
+	if len(fileRow) == 0 {
+		return url, filename
 	}
+
+	splitRow := strings.Split(fileRow, "|")
+	url = splitRow[0]
+
+	if len(splitRow) > 1 {
+		filename = splitRow[1]
+	}
+
+	return url, filename
 }

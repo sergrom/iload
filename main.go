@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"errors"
 	"flag"
 	"fmt"
@@ -13,7 +12,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"sync"
 )
 
 const NumberOfThreadsDefault = 5
@@ -37,35 +35,23 @@ func main() {
 		return
 	}
 
-	// 1. Файл в урлами
-	file, err := os.Open(InputFile)
+	var dl DownloadList
+
+	// 1. Открываем файл
+	err := dl.Open(InputFile)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer file.Close()
+	defer dl.Close()
 
 	// 2. Проверить директорию
 	if _, err1 := os.Stat(OutputDir); err1 != nil {
 		log.Fatal(err1)
 	}
 
-	// 3. Получаем урлы
-	var downloads []Download
-
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		url, filename := parseRow(scanner.Text())
-		if url != "" {
-			downloads = append(downloads, Download{url, filename})
-		}
-	}
-
-	dl := DownloadList{downloads, sync.Mutex{}, 0}
-	dl.fillOutputFileNames()
-
 	c := make(chan int, NumThreads)
 
-	// 4. Качаем файлы
+	// 3. Качаем файлы
 	for i:=0; i < NumThreads; i++ {
 		go func(i int) {
 			for {
@@ -92,23 +78,6 @@ func main() {
 	for i:=0; i < NumThreads; i++ {
 		<-c
 	}
-}
-
-func parseRow(fileRow string) (string, string) {
-	var url, filename string
-
-	if len(fileRow) == 0 {
-		return url, filename
-	}
-
-	splitRow := strings.Split(fileRow, "|")
-	url = splitRow[0]
-
-	if len(splitRow) > 1 {
-		filename = splitRow[1]
-	}
-
-	return url, filename
 }
 
 func saveFile(url string, outputFile string) (int64, string, error) {
