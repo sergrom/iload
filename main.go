@@ -19,20 +19,20 @@ import (
 const NumberOfThreadsDefault = 5
 
 func main() {
-	var MaxWorkers int
+	var NumThreads int
 	var InputFile string
 	var OutputDir string
 	var Verbose bool
 
 	flag.StringVar(&InputFile, "f", "", "Input file with urls you want to download. Each url must be in separate line.")
 	flag.StringVar(&OutputDir, "d", "", "Output directory to which you want to save downloaded files.")
-	flag.IntVar(&MaxWorkers, "th", NumberOfThreadsDefault,"Number of threads.")
+	flag.IntVar(&NumThreads, "th", NumberOfThreadsDefault,"Number of threads.")
 	flag.BoolVar(&Verbose, "v", false, "Verbose")
 	flag.Parse()
 
 	OutputDir = strings.TrimRight(OutputDir, "/")
 
-	if InputFile == "" || OutputDir == "" || MaxWorkers < 1 {
+	if InputFile == "" || OutputDir == "" || NumThreads < 1 {
 		flag.Usage()
 		return
 	}
@@ -63,10 +63,10 @@ func main() {
 	dl := DownloadList{downloads, sync.Mutex{}, 0}
 	dl.fillOutputFileNames()
 
-	c := make(chan int, MaxWorkers)
+	c := make(chan int, NumThreads)
 
-	// 4. Качаем картинки
-	for i:=0; i < MaxWorkers; i++ {
+	// 4. Качаем файлы
+	for i:=0; i < NumThreads; i++ {
 		go func(i int) {
 			for {
 				d, done := dl.getNext()
@@ -83,11 +83,13 @@ func main() {
 					}
 				}
 			}
-			c <- 0
+			defer func() {
+				c <- 0
+			}()
 		}(i)
 	}
 
-	for i:=0; i < MaxWorkers; i++ {
+	for i:=0; i < NumThreads; i++ {
 		<-c
 	}
 }
@@ -179,10 +181,10 @@ func getPrettySize(size int64) string {
 	case size < 1024:
 		return fmt.Sprintf("%d B", size)
 	case size < 1024*1024:
-		return fmt.Sprintf("%.1f KB", float64(size)/1024)
+		return fmt.Sprintf("%.2f KB", float64(size)/1024)
 	case size < 1024*1024*1024:
-		return fmt.Sprintf("%.1f MB", float64(size)/1024/1024)
+		return fmt.Sprintf("%.2f MB", float64(size)/1024/1024)
 	default:
-		return fmt.Sprintf("%.1f GB", float64(size)/1024/1024/1024)
+		return fmt.Sprintf("%.2f GB", float64(size)/1024/1024/1024)
 	}
 }
