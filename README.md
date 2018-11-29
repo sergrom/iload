@@ -7,7 +7,7 @@ After you compile the source code, run executable file as follows:
 $ ./iload -f /path/to/input/file.txt -d /directory/to/output/ -th 5 -v
 ```
 ## Parameters and options
-<code>-v</code> - Input file with urls you want to download. Each url must be in separate line.<br>
+<code>-f</code> - Input file with urls you want to download. Each url must be in separate line.<br>
 <code>-d</code> - Output directory to which you want to save files.<br>
 <code>-th</code> - Number of threads (default 5).<br>
 <code>-v</code> - Verbose.
