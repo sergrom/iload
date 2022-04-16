@@ -1,4 +1,4 @@
-package main
+package app
 
 import (
 	"bufio"
@@ -8,11 +8,13 @@ import (
 	"sync"
 )
 
+// Download ...
 type Download struct {
 	url      string
 	filename string
 }
 
+// DownloadList ...
 type DownloadList struct {
 	file         *os.File
 	scanner      *bufio.Scanner
@@ -21,6 +23,7 @@ type DownloadList struct {
 	currentIndex int
 }
 
+// Open ...
 func (dl *DownloadList) Open(filename string) error {
 	f, err := os.Open(filename)
 	if err != nil {
@@ -32,6 +35,7 @@ func (dl *DownloadList) Open(filename string) error {
 	return nil
 }
 
+// Close ...
 func (dl *DownloadList) Close() {
 	dl.file.Close()
 }
