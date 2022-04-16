@@ -1,16 +1,41 @@
+[![build](https://github.com/sergrom/iload/workflows/build/badge.svg)](https://github.com/sergrom/iload/actions/workflows/build.yml)
+[![](https://img.shields.io/github/workflow/status/sergrom/iload/test?longCache=tru&label=test&logo=github%20actions&logoColor=fff)](https://github.com/sergrom/iload/actions?query=test)
+
 # iload
 Multithread file downloader
 
-## Usage
-After you compile the source code, run executable file as follows:
+## Install
+1. First, install golang:
+https://go.dev/doc/install
+
+2. Then type in console:
 ```bash
-$ ./iload -f /path/to/input/file.txt -d /directory/to/output/ -t 5 -v
+$ go install github.com/sergrom/iload
 ```
+
+## Usage
+To see parameters and options type:
+```bash
+$ iload -h
+```
+
+## Example
+If you want to download files with urls listed in <code>/path/to/input/file.txt</code> to directory <code>/directory/to/output/</code> with <code>5 threads</code> and <code>verbose</code> mode type:
+```bash
+$ iload -f /path/to/input/file.txt -d /directory/to/output/ -t 5 -v
+````
+or
+```bash
+iload --input-file="/path/to/input/file.txt" --output-dir="/directory/to/output/" --threads-num=5 --verbose
+```
+
 ## Parameters and options
-<code>-f</code> - Input file with urls you want to download. Each url must be in separate line.<br>
-<code>-d</code> - Output directory to which you want to save files.<br>
-<code>-th</code> - Number of threads (default 5).<br>
-<code>-v</code> - Verbose.
+<code>-h</code>, <code>--help</code>                help for iload<br>
+<code>-f</code>, <code>--input-file</code> string   Input file with urls you want to download. Each url must be in separate line<br>
+<code>-d</code>, <code>--output-dir</code> string   Output directory to which you want to save downloaded files<br>
+<code>-t</code>, <code>--threads-num</code> int     Number of threads (default 5)<br>
+<code>-v</code>, <code>--verbose</code>             Verbose
+
 ## Input file
 The input file must be specified by parameter <code>-f</code> and must contain a list of urls to files.
 Each url should be in separate line like this:
