@@ -4,7 +4,7 @@ Multithread file downloader
 ## Usage
 After you compile the source code, run executable file as follows:
 ```bash
-$ ./iload -f /path/to/input/file.txt -d /directory/to/output/ -th 5 -v
+$ ./iload -f /path/to/input/file.txt -d /directory/to/output/ -t 5 -v
 ```
 ## Parameters and options
 <code>-f</code> - Input file with urls you want to download. Each url must be in separate line.<br>
