@@ -1,5 +1,4 @@
 [![build](https://github.com/sergrom/iload/workflows/build/badge.svg)](https://github.com/sergrom/iload/actions/workflows/build.yml)
-[![](https://img.shields.io/github/workflow/status/sergrom/iload/test?longCache=tru&label=test&logo=github%20actions&logoColor=fff)](https://github.com/sergrom/iload/actions?query=test)
 
 # iload
 Multithread file downloader
